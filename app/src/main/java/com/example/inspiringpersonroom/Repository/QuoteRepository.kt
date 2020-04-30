@@ -13,4 +13,8 @@ class QuoteRepository(private val quoteDao: QuoteDao) {
     fun insert(quote: Quote){
         quoteDao.insert(quote)
     }
+
+    fun deletePersonQuotes(personId: Int){
+        quoteDao.deletePersonQuotes(personId)
+    }
 }

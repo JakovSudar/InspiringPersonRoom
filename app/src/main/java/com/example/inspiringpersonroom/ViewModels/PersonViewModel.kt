@@ -37,4 +37,7 @@ class PersonViewModel (application: Application): AndroidViewModel(application) 
     fun delete(person: Person){
         repository.delete(person)
     }
+    fun findByName(name:String):Person{
+        return repository.findByName(name)
+    }
 }

@@ -16,7 +16,7 @@ class FragmentAdapter(
 
     private val fragments = arrayOf(
         RecyclerFragment.newInstance(personViewModel,quoteViewModel),
-        AddFragment.newInstance(personViewModel)
+        AddFragment.newInstance(personViewModel,quoteViewModel)
     )
     private val titles = arrayOf("Persons", "Add")
 

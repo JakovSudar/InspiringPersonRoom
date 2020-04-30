@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.add_person_fragment.*
 
 class AddFragment : Fragment(){
     var newPersonQuotes : List<Quote> =ArrayList()
+    var editingPersonId: Int = -1
 
     companion object{
         lateinit var personViewModel: PersonViewModel
@@ -45,11 +46,15 @@ class AddFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        addBtn.setOnClickListener{addPerson()}
-        quotesBtn.setOnClickListener{openQuotesFragment()}
+        setUpListeners()
+        setUpObservers()
+    }
+
+    private fun setUpObservers() {
         personViewModel.editParson.observe(viewLifecycleOwner, Observer {
             it?.let {
                 populateViews(it)
+                editingPersonId = it.id
             }
         })
         quoteViewModel.newPersonQuotes.observe(viewLifecycleOwner, Observer {
@@ -59,8 +64,19 @@ class AddFragment : Fragment(){
         })
     }
 
+    private fun setUpListeners() {
+        addBtn.setOnClickListener{addPerson()}
+        quotesBtn.setOnClickListener{openQuotesFragment()}
+        cancelBtn.setOnClickListener{cancelAdding()}
+    }
+
+    private fun cancelAdding() {
+        clearFields()
+        editingPersonId = -1
+    }
+
     private fun openQuotesFragment() {
-        val addQuotes = AddQuotes.newInstance(quoteViewModel)
+        val addQuotes = AddQuotes.newInstance(personViewModel, quoteViewModel,editingPersonId)
         activity?.supportFragmentManager?.beginTransaction()
             ?.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.enter,R.anim.exit)
             ?.addToBackStack(null)
@@ -75,30 +91,38 @@ class AddFragment : Fragment(){
         val descr = newDescription.text.toString()
         val img = newImage.text.toString()
         if(name.isNotBlank() && date.isNotBlank() && descr.isNotBlank()) {
-                if (existingPerson != null) {
-                    val person = Person(
-                        existingPerson.id,
-                        name,
-                        date,
-                        descr,
-                        img
-                    )
-                    personViewModel.update(person)
-                    clearFields()
-                } else if(newPersonQuotes.isNotEmpty()){
-                    val person = Person(
-                        0,
-                        name,
-                        date,
-                        descr,
-                        img
-                    )
-                    personViewModel.insert(person)
-                    var nperson = personViewModel.findByName(person.name)
-                    quoteViewModel.insertMultiple(nperson,newPersonQuotes)
-                    newPersonQuotes = emptyList()
-                    clearFields()
-                }else Toast.makeText(context,"Add Quotes!", Toast.LENGTH_SHORT).show()
+            if (existingPerson != null) {
+                val person = Person(
+                    existingPerson.id,
+                    name,
+                    date,
+                    descr,
+                    img
+                )
+                //bilo je promjena u quotovima
+                if(newPersonQuotes.isNotEmpty()){
+                    quoteViewModel.deletePersonQuote(person.id)
+                    quoteViewModel.insertMultiple(person,newPersonQuotes)
+                }
+                personViewModel.update(person)
+                clearFields()
+                editingPersonId = -1
+                newPersonQuotes = emptyList()
+            } else if(newPersonQuotes.isNotEmpty()){
+                val person = Person(
+                    0,
+                    name,
+                    date,
+                    descr,
+                    img
+                )
+                personViewModel.insert(person)
+                var nperson = personViewModel.findByName(person.name)
+                quoteViewModel.insertMultiple(nperson,newPersonQuotes)
+                newPersonQuotes = emptyList()
+                clearFields()
+                editingPersonId = -1
+            }else Toast.makeText(context,"Add Quotes!", Toast.LENGTH_SHORT).show()
 
         } else Toast.makeText(context,"Empty field!", Toast.LENGTH_SHORT).show()
 

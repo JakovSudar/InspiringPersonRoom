@@ -12,4 +12,7 @@ interface QuoteDao {
 
     @Query("SELECT * FROM quotes WHERE personId = :personId")
     fun getQuotesOfPerson(personId: Int) : List<Quote>
+
+    @Query("DELETE FROM quotes WHERE personId = :personId")
+    fun deletePersonQuotes(personId: Int)
 }

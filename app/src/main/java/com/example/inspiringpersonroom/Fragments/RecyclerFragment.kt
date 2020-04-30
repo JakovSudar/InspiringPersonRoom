@@ -26,14 +26,12 @@ class RecyclerFragment : Fragment() {
         }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
-        val view = inflater.inflate(R.layout.recycler_fragment, container,false)
-        return view
+        return inflater.inflate(R.layout.recycler_fragment, container,false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler.itemAnimator = DefaultItemAnimator()
         recycler.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
-
         val adapter = PersonAdapter(
             personViewModel,
             quoteViewModel,

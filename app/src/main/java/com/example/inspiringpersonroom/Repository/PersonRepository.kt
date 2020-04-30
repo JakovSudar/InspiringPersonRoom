@@ -23,4 +23,8 @@ class PersonRepository (private val personDao: PersonDao) {
         personDao.delete(person)
     }
 
+    fun findByName(name:String):Person{
+        return personDao.getByName(name)
+    }
+
 }

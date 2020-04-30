@@ -18,9 +18,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setUpUi()
+        setUpObservers()
+    }
 
+
+    private fun setUpObservers() {
         personViewModel.editParson.observe(this, Observer {
             it?.let {
                 viewPager.currentItem = 1
@@ -31,8 +34,8 @@ class MainActivity : AppCompatActivity() {
                 viewPager.currentItem = 0
             }
         })
-
     }
+
     private fun setUpUi() {
         personViewModel = ViewModelProvider(this).get(PersonViewModel::class.java)
         quoteViewModel = ViewModelProvider(this).get(QuoteViewModel::class.java)
@@ -43,9 +46,5 @@ class MainActivity : AppCompatActivity() {
                 quoteViewModel
             )
         tabLayout.setupWithViewPager(viewPager)
-
-
     }
-
-
 }

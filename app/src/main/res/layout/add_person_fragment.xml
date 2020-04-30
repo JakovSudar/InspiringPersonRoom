@@ -41,7 +41,7 @@
             android:layout_height="60dp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/quotesBtn"
-            android:text="add quotes"
+            android:text="quotes"
             android:background="@color/colorPrimary"
             />
         <androidx.appcompat.widget.AppCompatButton
@@ -49,7 +49,14 @@
             android:layout_marginTop="10dp"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Add"/>
+            android:text="save"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancelBtn"
+            android:text="cancel"
+            android:background="#FB7E7E"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            />
         <TextView
             android:visibility="gone"
             android:id="@+id/personId"

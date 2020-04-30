@@ -1,36 +1,77 @@
 package com.example.inspiringpersonroom.Fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.inspiringpersonroom.Entity.Quote
 import com.example.inspiringpersonroom.R
+import com.example.inspiringpersonroom.ViewModels.PersonViewModel
 import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 import kotlinx.android.synthetic.main.fragment_add_quotes.*
+
 
 class AddQuotes : Fragment() {
     var numberOfQuotes = 1
 
+    fun View.hideKeyboard() {
+        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(windowToken, 0)
+    }
+
     companion object {
         lateinit var quoteViewModel: QuoteViewModel
-        fun newInstance(quoteViewModel: QuoteViewModel):AddQuotes{
+        lateinit var personViewModel: PersonViewModel
+        var editPersonId: Int = -1
+        fun newInstance(
+            personViewModel: PersonViewModel,
+            quoteViewModel: QuoteViewModel,
+            editPersonId: Int
+        ): AddQuotes {
             Companion.quoteViewModel = quoteViewModel
+            Companion.personViewModel = personViewModel
+            Companion.editPersonId = editPersonId
             return AddQuotes()
         }
     }
+    private fun populateViews() {
+        if(editPersonId!=-1){
+            val existingPersonQuote = quoteViewModel.getQuotesOfPerson(editPersonId)
+            for(quote in existingPersonQuote){
+                addEditText(quote.quote)
+            }
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_add_quotes, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addMoreBtn.setOnClickListener{addEditText()}
-        deleteQuoteBtn.setOnClickListener{deleteEditText()}
-        saveBtn.setOnClickListener{saveQuotes()}
+        setUpUi()
+        populateViews()
+    }
+
+    private fun setUpUi() {
+        addMoreBtn.setOnClickListener { addEditText("") }
+        deleteQuoteBtn.setOnClickListener { deleteEditText() }
+        saveBtn.setOnClickListener { saveQuotes() }
     }
 
     private fun saveQuotes() {
+        saveBtn.hideKeyboard()
         var quotes : MutableList<Quote> = ArrayList()
         var quotesEt = getEditTexts()
         for (et in quotesEt){
@@ -50,7 +91,7 @@ class AddQuotes : Fragment() {
         return editTexts
     }
 
-    private fun addEditText() {
+    private fun addEditText(text:String) {
         if(numberOfQuotes<6){
             val editText = EditText(context)
             val p = LinearLayout.LayoutParams(
@@ -60,6 +101,7 @@ class AddQuotes : Fragment() {
             editText.layoutParams = p
             editText.hint = "Quote "+numberOfQuotes+": "
             editText.id = numberOfQuotes
+            editText.setText(text)
             quotesLayout.addView(editText)
             numberOfQuotes++
             saveBtn.visibility = View.VISIBLE
@@ -77,10 +119,5 @@ class AddQuotes : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add_quotes, container, false)
-    }
+
 }

@@ -49,7 +49,7 @@ abstract  class PersonDatabase : RoomDatabase(){
 
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
-                if(!preferenceManager.isFirstTime()){
+                if(preferenceManager.isFirstTime()){
                     INSTANCE?.let{
                         database -> scope.launch {
                             populateDatabase(database.personDao(), database.quoteDao())
