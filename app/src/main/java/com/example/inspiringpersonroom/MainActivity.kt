@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.inspiringpersonroom.Adapters.FragmentAdapter
+import com.example.inspiringpersonroom.ViewModels.PersonViewModel
+import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     //val personDao = PersonDatabase.getInstance().personDao()
 
     private lateinit var personViewModel: PersonViewModel
+    private lateinit var quoteViewModel: QuoteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +35,13 @@ class MainActivity : AppCompatActivity() {
     }
     private fun setUpUi() {
         personViewModel = ViewModelProvider(this).get(PersonViewModel::class.java)
-        viewPager.adapter = FragmentAdapter(supportFragmentManager , personViewModel)
+        quoteViewModel = ViewModelProvider(this).get(QuoteViewModel::class.java)
+        viewPager.adapter =
+            FragmentAdapter(
+                supportFragmentManager,
+                personViewModel,
+                quoteViewModel
+            )
         tabLayout.setupWithViewPager(viewPager)
 
 

@@ -1,16 +1,21 @@
-package com.example.inspiringpersonroom
+package com.example.inspiringpersonroom.Adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.inspiringpersonroom.Fragments.AddFragment
+import com.example.inspiringpersonroom.Fragments.RecyclerFragment
+import com.example.inspiringpersonroom.ViewModels.PersonViewModel
+import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 
 class FragmentAdapter(
     fragmentManager: FragmentManager,
-    personViewModel: PersonViewModel
+    personViewModel: PersonViewModel,
+    quoteViewModel: QuoteViewModel
 ): FragmentPagerAdapter(fragmentManager) {
 
     private val fragments = arrayOf(
-        RecyclerFragment.newInstance(personViewModel),
+        RecyclerFragment.newInstance(personViewModel,quoteViewModel),
         AddFragment.newInstance(personViewModel)
     )
     private val titles = arrayOf("Persons", "Add")

@@ -1,16 +1,21 @@
-package com.example.inspiringpersonroom
+package com.example.inspiringpersonroom.Adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.inspiringpersonroom.Entity.Person
+import com.example.inspiringpersonroom.R
+import com.example.inspiringpersonroom.ViewModels.PersonViewModel
+import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 import kotlinx.android.synthetic.main.person_item.view.*
 
 class PersonAdapter internal constructor(
     val personViewModel: PersonViewModel,
+    val quoteViewModel: QuoteViewModel,
     context: Context
 ): RecyclerView.Adapter<PersonAdapter.PersonViewHolder>(){
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -31,9 +36,16 @@ class PersonAdapter internal constructor(
             itemView.deleteBtn.setOnClickListener{
                 personViewModel.delete(person)
             }
+            itemView.personImage.setOnClickListener{
+                Toast.makeText(it.context,getRandomQoute(person),Toast.LENGTH_LONG).show()
+            }
         }
     }
-
+    fun getRandomQoute(person : Person): String{
+        val quotes = quoteViewModel.getQuotesOfPerson(person.id)
+        val randomnumber = (quotes.indices).shuffled().first()
+        return  quotes[randomnumber].quote
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val itemView = inflater.inflate(R.layout.person_item,parent,false)
         return PersonViewHolder(itemView)

@@ -1,4 +1,4 @@
-package com.example.inspiringpersonroom
+package com.example.inspiringpersonroom.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.example.inspiringpersonroom.Entity.Person
+import com.example.inspiringpersonroom.R
+import com.example.inspiringpersonroom.ViewModels.PersonViewModel
 import kotlinx.android.synthetic.main.add_person_fragment.*
 
 
 class AddFragment : Fragment(){
     companion object{
         lateinit var personViewModel: PersonViewModel
-        fun newInstance(personViewModel: PersonViewModel): AddFragment{
-            this.personViewModel = personViewModel
+        fun newInstance(personViewModel: PersonViewModel): AddFragment {
+            Companion.personViewModel = personViewModel
             return AddFragment()
         }
     }
@@ -52,10 +55,22 @@ class AddFragment : Fragment(){
         val img = newImage.text.toString()
         if(name.isNotBlank() && date.isNotBlank() && descr.isNotBlank()) {
             if (existingPerson != null) {
-                val person = Person(existingPerson.id, name, date, descr, img)
+                val person = Person(
+                    existingPerson.id,
+                    name,
+                    date,
+                    descr,
+                    img
+                )
                 personViewModel.update(person)
             } else {
-                val person = Person(0, name, date, descr, img)
+                val person = Person(
+                    0,
+                    name,
+                    date,
+                    descr,
+                    img
+                )
                 personViewModel.insert(person)
             }
             clearFields()

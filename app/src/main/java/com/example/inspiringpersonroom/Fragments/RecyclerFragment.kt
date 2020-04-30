@@ -1,4 +1,4 @@
-package com.example.inspiringpersonroom
+package com.example.inspiringpersonroom.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,13 +9,19 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.inspiringpersonroom.Adapters.PersonAdapter
+import com.example.inspiringpersonroom.R
+import com.example.inspiringpersonroom.ViewModels.PersonViewModel
+import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 import kotlinx.android.synthetic.main.recycler_fragment.*
 
 class RecyclerFragment : Fragment() {
     companion object{
         lateinit var personViewModel: PersonViewModel
-        fun newInstance(personViewModel: PersonViewModel):RecyclerFragment{
-            this.personViewModel = personViewModel
+        lateinit var quoteViewModel: QuoteViewModel
+        fun newInstance(personViewModel: PersonViewModel, quoteViewModel: QuoteViewModel): RecyclerFragment {
+            Companion.personViewModel = personViewModel
+            Companion.quoteViewModel = quoteViewModel
             return RecyclerFragment()
         }
     }
@@ -28,7 +34,11 @@ class RecyclerFragment : Fragment() {
         recycler.itemAnimator = DefaultItemAnimator()
         recycler.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
 
-        val adapter = PersonAdapter(personViewModel,context!!)
+        val adapter = PersonAdapter(
+            personViewModel,
+            quoteViewModel,
+            context!!
+        )
         recycler.adapter = adapter
         personViewModel.allPersons.observe(viewLifecycleOwner, androidx.lifecycle.Observer { persons->
             persons?.let{persons->

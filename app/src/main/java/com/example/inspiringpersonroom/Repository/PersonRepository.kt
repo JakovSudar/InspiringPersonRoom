@@ -1,6 +1,8 @@
-package com.example.inspiringpersonroom
+package com.example.inspiringpersonroom.Repository
 
 import androidx.lifecycle.LiveData
+import com.example.inspiringpersonroom.Entity.Person
+import com.example.inspiringpersonroom.DAO.PersonDao
 
 class PersonRepository (private val personDao: PersonDao) {
     val allPersons: LiveData<List<Person>> = personDao.getAll()
@@ -9,7 +11,7 @@ class PersonRepository (private val personDao: PersonDao) {
         personDao.insert(person)
     }
 
-    fun find(id : Int): Person{
+    fun find(id : Int): Person {
         return personDao.find(id)
     }
 

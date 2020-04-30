@@ -1,4 +1,4 @@
-package com.example.inspiringpersonroom
+package com.example.inspiringpersonroom.helpers
 
 import android.content.Context
 
