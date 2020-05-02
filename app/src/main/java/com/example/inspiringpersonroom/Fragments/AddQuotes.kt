@@ -60,6 +60,7 @@ class AddQuotes : Fragment() {
     }
 
     private fun setUpUi() {
+        if(editPersonId == -1)
         addEditText("")
         addMoreBtn.setOnClickListener { addEditText("") }
         deleteQuoteBtn.setOnClickListener { deleteEditText() }
