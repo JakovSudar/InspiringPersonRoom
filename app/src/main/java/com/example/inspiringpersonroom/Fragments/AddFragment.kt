@@ -1,5 +1,6 @@
 package com.example.inspiringpersonroom.Fragments
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.example.inspiringpersonroom.Entity.Quote
 import com.example.inspiringpersonroom.R
 import com.example.inspiringpersonroom.ViewModels.PersonViewModel
 import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
+import com.example.inspiringpersonroom.helpers.InspiringPersonApp
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_person_fragment.*
 
@@ -19,13 +21,11 @@ import kotlinx.android.synthetic.main.add_person_fragment.*
 class AddFragment : Fragment(){
     var newPersonQuotes : List<Quote> =ArrayList()
     var editingPersonId: Int = -1
+    var personViewModel = PersonViewModel.getInstance(Application())
+    var quoteViewModel = QuoteViewModel.getInstance(Application())
 
     companion object{
-        lateinit var personViewModel: PersonViewModel
-        lateinit var quoteViewModel: QuoteViewModel
-        fun newInstance(personViewModel: PersonViewModel,quoteViewModel: QuoteViewModel): AddFragment {
-            Companion.personViewModel = personViewModel
-            Companion.quoteViewModel = quoteViewModel
+        fun newInstance(): AddFragment {
             return AddFragment()
         }
     }
@@ -76,7 +76,7 @@ class AddFragment : Fragment(){
     }
 
     private fun openQuotesFragment() {
-        val addQuotes = AddQuotes.newInstance(personViewModel, quoteViewModel,editingPersonId)
+        val addQuotes = AddQuotes.newInstance(editingPersonId)
         activity?.supportFragmentManager?.beginTransaction()
             ?.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.enter,R.anim.exit)
             ?.addToBackStack(null)
@@ -108,6 +108,7 @@ class AddFragment : Fragment(){
                 clearFields()
                 editingPersonId = -1
                 newPersonQuotes = emptyList()
+                Toast.makeText(context,"Person updated", Toast.LENGTH_SHORT).show()
             } else if(newPersonQuotes.isNotEmpty()){
                 val person = Person(
                     0,
@@ -117,11 +118,12 @@ class AddFragment : Fragment(){
                     img
                 )
                 personViewModel.insert(person)
-                var nperson = personViewModel.findByName(person.name)
-                quoteViewModel.insertMultiple(nperson,newPersonQuotes)
+                var newPerson = personViewModel.findByName(person.name)
+                quoteViewModel.insertMultiple(newPerson,newPersonQuotes)
                 newPersonQuotes = emptyList()
                 clearFields()
                 editingPersonId = -1
+                Toast.makeText(context,"Person Added", Toast.LENGTH_SHORT).show()
             }else Toast.makeText(context,"Add Quotes!", Toast.LENGTH_SHORT).show()
 
         } else Toast.makeText(context,"Empty field!", Toast.LENGTH_SHORT).show()

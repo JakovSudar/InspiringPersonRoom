@@ -1,5 +1,6 @@
 package com.example.inspiringpersonroom.Fragments
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,12 +17,10 @@ import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 import kotlinx.android.synthetic.main.recycler_fragment.*
 
 class RecyclerFragment : Fragment() {
+    private var personViewModel = PersonViewModel.getInstance(Application())
+
     companion object{
-        lateinit var personViewModel: PersonViewModel
-        lateinit var quoteViewModel: QuoteViewModel
-        fun newInstance(personViewModel: PersonViewModel, quoteViewModel: QuoteViewModel): RecyclerFragment {
-            Companion.personViewModel = personViewModel
-            Companion.quoteViewModel = quoteViewModel
+        fun newInstance(): RecyclerFragment {
             return RecyclerFragment()
         }
     }
@@ -33,8 +32,6 @@ class RecyclerFragment : Fragment() {
         recycler.itemAnimator = DefaultItemAnimator()
         recycler.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         val adapter = PersonAdapter(
-            personViewModel,
-            quoteViewModel,
             context!!
         )
         recycler.adapter = adapter

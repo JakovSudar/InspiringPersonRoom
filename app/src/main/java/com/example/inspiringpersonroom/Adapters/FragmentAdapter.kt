@@ -9,21 +9,18 @@ import com.example.inspiringpersonroom.ViewModels.PersonViewModel
 import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 
 class FragmentAdapter(
-    fragmentManager: FragmentManager,
-    personViewModel: PersonViewModel,
-    quoteViewModel: QuoteViewModel
-): FragmentPagerAdapter(fragmentManager) {
+    fragmentManager: FragmentManager
 
+): FragmentPagerAdapter(fragmentManager) {
     private val fragments = arrayOf(
-        RecyclerFragment.newInstance(personViewModel,quoteViewModel),
-        AddFragment.newInstance(personViewModel,quoteViewModel)
+        RecyclerFragment.newInstance(),
+        AddFragment.newInstance()
     )
     private val titles = arrayOf("Persons", "Add")
 
     override fun getItem(position: Int): Fragment {
         return fragments[position]
     }
-
     override fun getPageTitle(position: Int): CharSequence? {
         return titles[position]
     }

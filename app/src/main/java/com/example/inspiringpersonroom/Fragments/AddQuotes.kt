@@ -1,5 +1,6 @@
 package com.example.inspiringpersonroom.Fragments
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,23 +22,17 @@ import kotlinx.android.synthetic.main.fragment_add_quotes.*
 
 class AddQuotes : Fragment() {
     var numberOfQuotes = 1
-
-    fun View.hideKeyboard() {
+    private fun View.hideKeyboard() {
         val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(windowToken, 0)
     }
+    var quoteViewModel = QuoteViewModel.getInstance(Application())
 
     companion object {
-        lateinit var quoteViewModel: QuoteViewModel
-        lateinit var personViewModel: PersonViewModel
         var editPersonId: Int = -1
         fun newInstance(
-            personViewModel: PersonViewModel,
-            quoteViewModel: QuoteViewModel,
             editPersonId: Int
         ): AddQuotes {
-            Companion.quoteViewModel = quoteViewModel
-            Companion.personViewModel = personViewModel
             Companion.editPersonId = editPersonId
             return AddQuotes()
         }
@@ -65,6 +60,7 @@ class AddQuotes : Fragment() {
     }
 
     private fun setUpUi() {
+        addEditText("")
         addMoreBtn.setOnClickListener { addEditText("") }
         deleteQuoteBtn.setOnClickListener { deleteEditText() }
         saveBtn.setOnClickListener { saveQuotes() }
@@ -75,8 +71,10 @@ class AddQuotes : Fragment() {
         var quotes : MutableList<Quote> = ArrayList()
         var quotesEt = getEditTexts()
         for (et in quotesEt){
-            val quote = Quote(0, 0,et.text.toString())
-            quotes.add(quote)
+            if(et.text.isNotEmpty()){
+                val quote = Quote(0, 0,et.text.toString())
+                quotes.add(quote)
+            }
         }
         //okini livedatu
         quoteViewModel.newPersonQuotes.value = quotes
@@ -110,13 +108,14 @@ class AddQuotes : Fragment() {
     }
 
     private fun deleteEditText() {
-        if(numberOfQuotes>1) {
+        if(numberOfQuotes>2) {
             quotesLayout.removeViewAt(numberOfQuotes-2)
             numberOfQuotes--
             if(numberOfQuotes == 1){
                 saveBtn.visibility = View.GONE
             }
-        }
+        }else
+            Toast.makeText(context,"Minimum is 1!", Toast.LENGTH_SHORT).show()
     }
 
 

@@ -14,6 +14,16 @@ class PersonViewModel (application: Application): AndroidViewModel(application) 
     val allPersons : LiveData<List<Person>>
     val editParson = MutableLiveData<Person>()
 
+    companion object{
+        private var INSTANCE: PersonViewModel?= null
+        fun getInstance(application: Application): PersonViewModel{
+            if(INSTANCE == null){
+                INSTANCE = PersonViewModel(application)
+                return INSTANCE as PersonViewModel
+            }
+            return INSTANCE as PersonViewModel
+        }
+    }
     init {
         val personsDao = PersonDatabase.getInstance(
             viewModelScope

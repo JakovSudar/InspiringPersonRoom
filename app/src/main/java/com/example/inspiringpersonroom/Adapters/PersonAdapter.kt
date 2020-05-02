@@ -1,5 +1,6 @@
 package com.example.inspiringpersonroom.Adapters
 
+import android.app.Application
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +15,12 @@ import com.example.inspiringpersonroom.ViewModels.QuoteViewModel
 import kotlinx.android.synthetic.main.person_item.view.*
 
 class PersonAdapter internal constructor(
-    val personViewModel: PersonViewModel,
-    val quoteViewModel: QuoteViewModel,
     context: Context
 ): RecyclerView.Adapter<PersonAdapter.PersonViewHolder>(){
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var persons = emptyList<Person>()
+    var personViewModel = PersonViewModel.getInstance(Application())
+    var quoteViewModel = QuoteViewModel.getInstance(Application())
 
     inner class PersonViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         fun bind(person : Person){

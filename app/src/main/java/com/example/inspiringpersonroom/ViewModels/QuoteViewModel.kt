@@ -14,6 +14,17 @@ class QuoteViewModel (application: Application): AndroidViewModel(application) {
     private val repository: QuoteRepository
     val newPersonQuotes = MutableLiveData<List<Quote>>()
 
+
+    companion object{
+        private var INSTANCE: QuoteViewModel?= null
+        fun getInstance(application: Application): QuoteViewModel{
+            if(INSTANCE == null){
+                INSTANCE = QuoteViewModel(application)
+                return INSTANCE as QuoteViewModel
+            }
+            return INSTANCE as QuoteViewModel
+        }
+    }
     init {
         val personsDao = PersonDatabase.getInstance(
             viewModelScope
@@ -24,6 +35,7 @@ class QuoteViewModel (application: Application): AndroidViewModel(application) {
         repository =
             QuoteRepository(quotesDao)
     }
+
 
     fun getQuotesOfPerson(personId: Int):List<Quote>{
         return repository.getQuotesOfPerson(personId)
